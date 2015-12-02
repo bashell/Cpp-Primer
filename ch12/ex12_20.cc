@@ -5,7 +5,7 @@
 int main(int argc, char **argv)
 {
   if(argc != 2) {
-    std::cerr << "We need a input file!" << std::endl;
+    std::cerr << "We need an input file!" << std::endl;
     return -1;
   }    
   std::ifstream in(argv[1]);
