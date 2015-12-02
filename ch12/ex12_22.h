@@ -1,5 +1,5 @@
-#ifndef EX12_2_H
-#define EX12_2_H
+#ifndef EX12_22_H
+#define EX12_22_H
 
 #include <vector>
 #include <string>
@@ -10,9 +10,15 @@
 using std::string;
 using std::vector;
 
+class ConstStrBlobPtr;
+
 class StrBlob {
  public:
   using size_type = vector<string>::size_type;
+  friend class ConstStrBlobPtr;
+  ConstStrBlobPtr begin() const;
+  ConstStrBlobPtr end() const;
+
   StrBlob(): data(std::make_shared<vector<string>>()) {}
   StrBlob(std::initializer_list<string> il): data(std::make_shared<vector<string>>(il)) {}
   size_type size() const { return data->size(); }
@@ -49,4 +55,43 @@ class StrBlob {
   std::shared_ptr<vector<string>> data;
 };
 
-#endif  // EX12_2_H
+class ConstStrBlobPtr {
+ public:
+  ConstStrBlobPtr(): curr(0) {}
+  ConstStrBlobPtr(const StrBlob &a, size_t sz = 0): wptr(a.data), curr(sz) {}
+  bool operator!=(const ConstStrBlobPtr &p) { return p.curr != curr; }
+  const string &deref() const {
+    auto p = check(curr, "dereference past end");
+    return (*p)[curr];
+  }
+  ConstStrBlobPtr &incr() {
+    check(curr, "increment past end of StrBlobPtr");
+    ++curr;
+    return *this;
+  }
+
+ private:
+  std::shared_ptr<vector<string>> check(size_t i, const string &msg) const {
+    auto ret = wptr.lock();
+    if(!ret)
+      throw std::runtime_error("unbound StrBlobPtr");
+    if(i >= ret->size())
+      throw std::out_of_range(msg);
+    return ret;
+  }
+
+  private:
+   std::weak_ptr<vector<string>> wptr;
+   size_t curr;
+};
+
+inline ConstStrBlobPtr StrBlob::begin() const {
+  return ConstStrBlobPtr(*this);
+}
+
+inline ConstStrBlobPtr StrBlob::end() const {
+  auto ret = ConstStrBlobPtr(*this, data->size());
+  return ret;
+}
+
+#endif  // EX12_22_H
