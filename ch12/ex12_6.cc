@@ -1,10 +1,12 @@
 #include <iostream>
 #include <vector>
+#include <new>
 
 using std::vector;
 using std::cin;
 using std::cout;
 using std::endl;
+using std::nothrow;
 
 vector<int>* MyFunc1() {
   return new (nothrow) vector<int>;
