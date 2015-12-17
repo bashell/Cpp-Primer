@@ -31,10 +31,10 @@ TextQuery::TextQuery(ifstream &ifs) : input(new vector<string>) {
 }
 
 QueryResult TextQuery::query(const string &str) const {
-  static shared_ptr<set<LineNo>> nodate(new set<LineNo>);
+  static shared_ptr<set<LineNo>> nodata(new set<LineNo>);
   auto found = result.find(str);
   if(found == result.end())
-    return QueryResult(str, nodate, input);
+    return QueryResult(str, nodata, input);
   else
     return QueryResult(str, found->second, input);
 }
