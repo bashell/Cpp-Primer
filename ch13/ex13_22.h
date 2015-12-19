@@ -18,7 +18,7 @@ class HasPtr {
 
  private:
    std::string *ps;
-  int i;
+   int i;
 };
 
 #endif  // EX13_22_H
