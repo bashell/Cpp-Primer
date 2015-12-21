@@ -1,5 +1,6 @@
+#include <iostream>
 #include <algorithm>
-#include "ex13_44.h"
+#include "ex13_47.h"
 
 std::pair<char*, char*>
 String::alloc_n_copy(const char *b, const char *e) {
@@ -20,6 +21,7 @@ String::String(const String &rhs) {
   auto newstr = alloc_n_copy(rhs.elements, rhs.end);
   elements = newstr.first;
   end = newstr.second;
+  std::cout << "copy constructor" << std::endl;
 }
 
 void String::free() {
@@ -38,10 +40,11 @@ String& String::operator=(const String &rhs) {
   free();
   elements = data.first;
   end = data.second;
+  std::cout << "copy assignment" << std::endl;
   return *this;
 }
 
-int main()
+int main() 
 {
   return 0;
 }

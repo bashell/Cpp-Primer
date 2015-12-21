@@ -1,5 +1,32 @@
+#ifndef EX13_47_H
+#define EX13_47_H
+
+#include <memory>
+#include <utility>
+#include <iostream>
 #include <algorithm>
-#include "ex13_44.h"
+
+class String {
+ public:
+  String() : String("") { }  // default constructor
+  String(const char*);  // constructor
+  String(const String&);
+  String &operator=(const String&);
+  ~String(); 
+
+  const char *c_str() const { return elements; }
+  size_t size() const { return end - elements; }
+  size_t length() const { return end - elements - 1;}
+
+ private:
+  std::pair<char*, char*> alloc_n_copy(const char*, const char*);
+  void free();
+
+ private:
+  std::allocator<char> alloc;
+  char *elements;
+  char *end;
+};
 
 std::pair<char*, char*>
 String::alloc_n_copy(const char *b, const char *e) {
@@ -20,6 +47,7 @@ String::String(const String &rhs) {
   auto newstr = alloc_n_copy(rhs.elements, rhs.end);
   elements = newstr.first;
   end = newstr.second;
+  std::cout << "copy constructor" << std::endl;
 }
 
 void String::free() {
@@ -38,10 +66,7 @@ String& String::operator=(const String &rhs) {
   free();
   elements = data.first;
   end = data.second;
-  return *this;
+  std::cout << "copy assignment" << std::endl;
 }
 
-int main()
-{
-  return 0;
-}
+#endif  // EX13_47_H
